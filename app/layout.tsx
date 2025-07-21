@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { circularStd } from "./fonts";
+import { circularStd, circularRegular, circularBold } from "./fonts";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +16,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${circularStd.variable} antialiased`}
+        className={`
+          ${circularStd.variable}
+          ${circularRegular.variable}
+          ${circularBold.variable}
+          antialiased`}
       >
         {children}
       </body>
