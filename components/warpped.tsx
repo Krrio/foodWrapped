@@ -83,41 +83,43 @@ const SlideWrapper: React.FC<{ children: React.ReactNode; gradient: string }> = 
 
 const WelcomeSlide: React.FC<{ person: string }> = ({ person }) => (
   <SlideWrapper gradient="bg-[url('/images/bg-2.png')] bg-contain bg-center bg-no-repeat circular-regular">
-    <div className="mb-8">
-      <h1 className="text-4xl font-bold mb-2 circular-regular">2025 Food Wrapped</h1>
-      <p className="text-lg opacity-90">RQG Edition</p>
+  <div className="mb-8 text-center">
+    <div className="flex items-end justify-center space-x-2">
+      <span className="text-4xl font-bold circular-bold leading-none text-black">2025</span>
+      <span className="text-2xl circular-black leading-tight text-black">Food Wrapped</span>
     </div>
-    <div>
-      <h2 className="text-2xl font-semibold mb-4">{person}!</h2>
-      <p className="text-lg opacity-90">Przygotowaliśmy dla Ciebie podsumowanie Twoich kulinarnych przygód</p>
+    <div className='mt-4'>
+        <p className='text-xl text-black circular-black'>
+            RQG Edition
+        </p>
     </div>
-  </SlideWrapper>
+  </div>
+</SlideWrapper>
+
 );
 
 const OrderCountSlide: React.FC<{ count: number; person: string }> = ({ count, person }) => (
-  <SlideWrapper gradient="bg-gradient-to-br from-green-500 to-teal-600">
-    <TrendingUp className="w-16 h-16 mx-auto mb-6" />
-    <h2 className="text-3xl font-bold mb-4">Twoje zamówienia</h2>
-    <div className="bg-white/20 rounded-2xl p-6 mb-4">
-      <div className="text-6xl font-bold mb-2">{count}</div>
-      <p className="text-lg">zamówień w tym roku</p>
+  <SlideWrapper gradient="bg-[url('/images/bg-3.jpg')] bg-contain bg-center bg-no-repeat circular-regular">
+    <h2 className="text-3xl font-bold mb-4 mt-8 circular-bold">Twoje zamówienia</h2>
+    <div className="">
+      <div className="text-6xl font-bold mb-2 circular-black">{count}</div>
+      <p className="text-lg">Tyle razy zamówiliśmy razem.</p>
     </div>
-    <p className="text-lg opacity-90">
-      {count > 10 ? 'Prawdziwy foodie!' : count > 5 ? 'Lubisz dobrze zjeść!' : 'Początkujący smakosz!'}
+    <p className="text-sm opacity-90 circular-medium mt-4">
+      {count > 10 ? 'Bratku mniam.' : count > 5 ? 'Nie tak źle.' : 'Że tak powiem, okazyjnie.'}
     </p>
   </SlideWrapper>
 );
 
 const FavoriteRestaurantSlide: React.FC<{ restaurant: string; count: number; spent: number }> = ({ restaurant, count, spent }) => (
-  <SlideWrapper gradient="bg-gradient-to-br from-orange-500 to-red-600">
-    <MapPin className="w-16 h-16 mx-auto mb-6" />
-    <h2 className="text-3xl font-bold mb-6">Twoje ulubione miejsce</h2>
-    <div className="bg-white/20 rounded-2xl p-6 mb-4">
-      <h3 className="text-2xl font-bold mb-2">{restaurant}</h3>
-      <p className="text-lg mb-2">{count} zamówień</p>
-      <p className="text-lg">{spent.toFixed(2)} zł wydane</p>
+  <SlideWrapper gradient="bg-[url('/images/bg-4.png')] bg-contain bg-center bg-no-repeat circular-bold">
+    <h2 className="text-3xl font-bold mb-6 circular-bold">Twoje ulubione miejsce</h2>
+    <div className="">
+      <h3 className="text-6xl font-bold mb-2 circular-black">{restaurant}</h3>
+      <p className="text-sm mb-2 mt-4 circular-medium">{count} razy zmawialismy z tego miejsca.</p>
+      <p className="text-4xl mt-10 circular-black">{spent.toFixed(2)} zł wydane</p>
     </div>
-    <p className="text-lg opacity-90">To miejsce ma Twoje serce! ❤️</p>
+    <p className="text-sm opacity-90 circular-medium">Raz wegab potem kolczyk w uchu.</p>
   </SlideWrapper>
 );
 
