@@ -38,3 +38,13 @@ body {
   font-weight: 700;
   font-style: normal;
 }
+
+.circular-regular {
+  font-family: var(--font-circular-regular, 'CircularStd');
+  font-weight: 400;
+}
+
+.circular-bold {
+  font-family: var(--font-circular-bold, 'CircularStd');
+  font-weight: 700;
+}
