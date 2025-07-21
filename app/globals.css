@@ -24,3 +24,17 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@font-face {
+  font-family: 'CircularStd';
+  src: url('/fonts/circular-std-2.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CircularStd';
+  src: url('/fonts/circular-std-4.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
