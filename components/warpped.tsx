@@ -86,7 +86,7 @@ const WelcomeSlide: React.FC<{ person: string }> = ({ person }) => (
       <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
         <span className="text-3xl">🍕</span>
       </div>
-      <h1 className="text-4xl font-bold mb-2">Food Wrapped</h1>
+      <h1 className="text-4xl font-bold mb-2 circular-regular">Food Wrapped</h1>
       <p className="text-lg opacity-90">2025</p>
     </div>
     <div>
@@ -181,7 +181,7 @@ const AdminPanel: React.FC<{ onSelectPerson: (person: string) => void }> = ({ on
           <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-3xl">🍕</span>
           </div>
-          <h1 className="text-4xl font-bold mb-2">Food Wrapped</h1>
+          <h1 className="text-4xl font-bold mb-2 circular-regular">Food Wrapped</h1>
           <p className="text-lg opacity-90">2025 - Panel administracyjny</p>
         </div>
         
