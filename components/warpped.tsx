@@ -82,16 +82,13 @@ const SlideWrapper: React.FC<{ children: React.ReactNode; gradient: string }> = 
 );
 
 const WelcomeSlide: React.FC<{ person: string }> = ({ person }) => (
-  <SlideWrapper gradient="bg-gradient-to-br from-purple-600 to-pink-600">
+  <SlideWrapper gradient="bg-[url('/images/bg-2.png')] bg-contain bg-center bg-no-repeat circular-regular">
     <div className="mb-8">
-      <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-        <span className="text-3xl">🍕</span>
-      </div>
-      <h1 className="text-4xl font-bold mb-2 circular-regular">Food Wrapped</h1>
-      <p className="text-lg opacity-90">2025</p>
+      <h1 className="text-4xl font-bold mb-2 circular-regular">2025 Food Wrapped</h1>
+      <p className="text-lg opacity-90">RQG Edition</p>
     </div>
     <div>
-      <h2 className="text-2xl font-semibold mb-4">Cześć {person}!</h2>
+      <h2 className="text-2xl font-semibold mb-4">{person}!</h2>
       <p className="text-lg opacity-90">Przygotowaliśmy dla Ciebie podsumowanie Twoich kulinarnych przygód</p>
     </div>
   </SlideWrapper>
@@ -381,7 +378,7 @@ const FoodWrapped: React.FC = () => {
   ];
 
   return (
-    <div className="w-full max-w-md mx-auto h-[600px] bg-black rounded-2xl shadow-2xl overflow-hidden relative">
+    <div className="w-full max-w-md mx-auto h-screen bg-black shadow-2xl overflow-hidden relative">
       {/* Slajd */}
       <div className="h-full">
         {slides[currentSlide]}
