@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Play, Pause, RotateCcw, TrendingUp, MapPin, Crown, DollarSign, Share2, Copy, CheckCircle } from 'lucide-react';
 import { Order, sampleData } from '@/constants/food';
+import Image from 'next/image';
 
 function generateSlug(name: string): string {
   const polishChars: { [key: string]: string } = {
@@ -175,18 +176,18 @@ const AdminPanel: React.FC<{ onSelectPerson: (person: string) => void }> = ({ on
   };
   
   return (
-    <div className="w-full max-w-md mx-auto h-[600px] bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl shadow-2xl overflow-hidden">
-      <div className="h-full flex flex-col justify-center items-center text-center p-8 text-white overflow-y-auto">
-        <div className="mb-8">
-          <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">🍕</span>
-          </div>
+    <div className="w-full max-w-md mx-auto h-screen bg-[url('/images/bg-1.png')] bg-cover bg-center shadow-2xl overflow-hidden">
+    <div className="h-full flex flex-col justify-center items-center text-center p-8 text-black overflow-y-auto">
+      <div className="mb-8">
+        <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 xl:mt-20">
+          <span className="text-3xl">
+            <Image src="/images/food.png" alt='food' width={48} height={48}/>
+          </span>
+        </div>
           <h1 className="text-4xl font-bold mb-2 circular-regular">Food Wrapped</h1>
-          <p className="text-lg opacity-90">2025 - Panel administracyjny</p>
         </div>
         
         <div className="w-full">
-          <h2 className="text-xl font-semibold mb-4">Indywidualne linki:</h2>
           <div className="space-y-3 max-h-80 overflow-y-auto">
             {people.map(person => {
               const slug = generateSlug(person);
