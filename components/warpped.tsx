@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Play, Pause, RotateCcw, TrendingUp, MapPin, Crown, DollarSign, Share2, Copy, CheckCircle } from 'lucide-react';
 import { Order, sampleData } from '@/constants/food';
 import Image from 'next/image';
@@ -111,49 +111,139 @@ const OrderCountSlide: React.FC<{ count: number; person: string }> = ({ count, p
   </SlideWrapper>
 );
 
-const FavoriteRestaurantSlide: React.FC<{ restaurant: string; count: number; spent: number }> = ({ restaurant, count, spent }) => (
-  <SlideWrapper gradient="bg-[url('/images/bg-4.png')] bg-contain bg-center bg-no-repeat circular-bold">
-    <h2 className="text-3xl font-bold mb-6 circular-bold">Twoje ulubione miejsce</h2>
-    <div className="">
-      <h3 className="text-6xl font-bold mb-2 circular-black">{restaurant}</h3>
-      <p className="text-sm mb-2 mt-4 circular-medium">{count} razy zmawialismy z tego miejsca.</p>
-      <p className="text-4xl mt-10 circular-black">{spent.toFixed(2)} zł wydane</p>
-    </div>
-    <p className="text-sm opacity-90 circular-medium">Raz wegab potem kolczyk w uchu.</p>
-  </SlideWrapper>
-);
+const FavoriteRestaurantSlide: React.FC<{ restaurant: string; count: number; spent: number }> = ({ restaurant, count, spent }) => {
+  const getCountText = (count: number) => {
+    if (count === 1) {
+      return "1 raz zamawialiśmy z tego miejsca.";
+    } else {
+      return `${count} razy zamawialiśmy z tego miejsca.`;
+    }
+  };
+
+  return (
+    <SlideWrapper gradient="bg-[url('/images/bg-4.png')] bg-contain bg-center bg-no-repeat circular-bold">
+      <h2 className="text-3xl font-bold mb-6 circular-bold">Twoje ulubione miejsce</h2>
+      <div className="">
+        <h3 className="text-6xl font-bold mb-2 circular-black">{restaurant}</h3>
+        <p className="text-sm mb-2 mt-4 circular-medium">{getCountText(count)}</p>
+        <p className="text-4xl mt-10 circular-black">{spent.toFixed(2)} zł wydane</p>
+      </div>
+      <p className="text-sm opacity-90 circular-medium">Raz wegab potem kolczyk w uchu.</p>
+    </SlideWrapper>
+  );
+};
 
 const RankingSlide: React.FC<{ ranking: number; betterThanPercent: number; totalPeople: number }> = ({ ranking, betterThanPercent, totalPeople }) => (
-  <SlideWrapper gradient="bg-gradient-to-br from-yellow-500 to-orange-500">
-    <Crown className="w-16 h-16 mx-auto mb-6" />
-    <h2 className="text-3xl font-bold mb-6">Twoja pozycja</h2>
-    <div className="bg-white/20 rounded-2xl p-6 mb-4">
-      <div className="text-5xl font-bold mb-2">#{ranking}</div>
-      <p className="text-lg mb-2">miejsce w rankingu</p>
+  <SlideWrapper gradient="bg-[url('/images/bg-5.png')] bg-contain bg-center bg-no-repeat circular-bold">
+    <h2 className="text-3xl font-bold circular-black">Twoja pozycja</h2>
+    <div className="">
+      <div className="text-5xl font-bold">#{ranking}</div>
     </div>
     <p className="text-lg opacity-90">
       {betterThanPercent > 80 ? `Jesteś w TOP 20%! 🔥` : 
        betterThanPercent > 50 ? `${betterThanPercent}% osób zamówiło mniej niż Ty!` :
-       'Jeszcze jest przestrzeń na więcej zamówień! 😉'}
+       ''}
     </p>
   </SlideWrapper>
 );
 
 const TotalSpentSlide: React.FC<{ amount: number; person: string }> = ({ amount, person }) => (
-  <SlideWrapper gradient="bg-gradient-to-br from-indigo-600 to-purple-700">
-    <DollarSign className="w-16 h-16 mx-auto mb-6" />
-    <h2 className="text-3xl font-bold mb-6">Twoje wydatki</h2>
-    <div className="bg-white/20 rounded-2xl p-8 mb-4">
-      <div className="text-5xl font-bold mb-2">{amount.toFixed(2)} zł</div>
-      <p className="text-lg">wydane na jedzenie</p>
+  <SlideWrapper gradient="bg-[url('/images/bg-1.png')] bg-contain bg-center bg-no-repeat circular-bold">
+    <div className="mt-[-8rem]">
+      <h2 className="text-3xl mb-4 text-black circular-black">Tyle wydałes na jedzenie</h2>
+      <div className="">
+        <div className="text-6xl mb-2 text-black circular-black">{amount.toFixed(2)} zł</div>
+        <p className="text-lg text-black">wydane na radosc</p>
+      </div>
+      <p className="text-lg opacity-90 mt-8 text-black">
+        {amount > 500 ? 'Bratku ja wydałem podobnie także się nie przejmuj' :
+        amount > 200 ? 'Bratku tyle radości razem' : 
+         amount > 100 ? 'Warto było czasami coś wydać' :
+         amount > 10 ? 'sporadycznie ale i tak baja' :
+         'Czemu nigdy nie zamawiasz?'}
+      </p>
     </div>
-    <p className="text-lg opacity-90">
-      {amount > 200 ? 'Inwestujesz w dobre jedzenie! 🍽️' : 
-       amount > 100 ? 'Umiar to podstawa! 👌' :
-       'Oszczędny jak ninja! 🥷'}
-    </p>
   </SlideWrapper>
 );
+
+const RestaurantSummarySlide: React.FC<{ person: string }> = ({ person }) => {
+  const personOrders = sampleData.filter(order => order.person === person);
+
+  const restaurantStats = personOrders.reduce((acc, order) => {
+    if (!acc[order.restaurant]) {
+      acc[order.restaurant] = {
+        name: order.restaurant,
+        totalSpent: 0,
+        orderCount: 0,
+        category: order.category || 'Różne',
+      };
+    }
+    acc[order.restaurant].totalSpent += order.amount;
+    acc[order.restaurant].orderCount += 1;
+    return acc;
+  }, {} as Record<string, { name: string; totalSpent: number; orderCount: number; category: string }>);
+
+  const sortedRestaurants = Object.values(restaurantStats)
+    .sort((a, b) => b.totalSpent - a.totalSpent)
+    .slice(0, 2);
+
+  const mostOrderedCategory = (() => {
+    const categoryCount: Record<string, number> = {};
+    personOrders.forEach(order => {
+      const category = order.category || 'Różne';
+      categoryCount[category] = (categoryCount[category] || 0) + 1;
+    });
+    return Object.entries(categoryCount).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Różne';
+  })();
+
+  return (
+    <SlideWrapper gradient="bg-[url('/images/bg-7.png')] bg-contain bg-center bg-no-repeat circular-bold">
+      <div className="w-full max-w-sm flex flex-col items-center justify-between h-full">
+        {/* Image in framed position */}
+        <div className="relative mb-4" style={{ marginTop: '-1rem' }}>
+          <div className="absolute inset-0 flex justify-center items-center">
+          </div>
+        </div>
+
+        {/* Stats in bottom half - evenly distributed */}
+        <div className="w-full flex-1 flex flex-col justify-center mt-[280px]">
+          <div className="grid grid-cols-2 gap-6 text-sm text-black">
+            <div>
+              <h3 className="text-lg circular-black mb-2">Top Restauracje</h3>
+              {sortedRestaurants.map((restaurant, index) => (
+                <div key={index} className="mb-1 text-lg circular-black">
+                  {index + 1}. {restaurant.name}
+                </div>
+              ))}
+            </div>
+
+            <div>
+              <h3 className="text-lg circular-black mb-2">Wydane kwoty</h3>
+              {sortedRestaurants.map((restaurant, index) => (
+                <div key={index} className="mb-1 circular-black text-lg">
+                  {restaurant.totalSpent.toFixed(0)} zł
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6 text-sm text-black mt-6">
+            <div>
+              <h3 className="text-lg circular-black mb-2">Liczba zamówień</h3>
+              <div className="text-2xl circular-black">{personOrders.length}</div>
+            </div>
+            <div>
+              <h3 className="text-lg circular-black mb-2">Top Gatunek</h3>
+              <div className="text-lg circular-bold">{mostOrderedCategory}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </SlideWrapper>
+  );
+};
+
+
 
 const AdminPanel: React.FC<{ onSelectPerson: (person: string) => void }> = ({ onSelectPerson }) => {
   const people = [...new Set(sampleData.map(order => order.person))];
@@ -170,7 +260,7 @@ const AdminPanel: React.FC<{ onSelectPerson: (person: string) => void }> = ({ on
       setCopiedLink(person);
       setTimeout(() => setCopiedLink(null), 2000);
     } catch (err) {
-      console.error('Не удалось скопировать ссылку:', err);
+      console.error('skibidi:', err);
     }
   };
   
@@ -260,8 +350,69 @@ const FoodWrapped: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(true);
   const [personNotFound, setPersonNotFound] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const currentAudioRef = useRef<string>('');
 
   const people = [...new Set(sampleData.map(order => order.person))];
+  
+  // Tablica ścieżek do plików muzycznych dla każdego slajdu
+  const soundTracks = [
+    '/sounds/sound1.mp3', // Welcome
+    '/sounds/sound2.mp3', // Order Count
+    '/sounds/sound3.mp3', // Favorite Restaurant
+    '/sounds/sound4.mp3', // Ranking
+    '/sounds/sound5.mp3', // Total Spent
+    '/sounds/sound1.mp3'  // Restaurant Summary
+  ];
+
+  // Funkcja do przełączania muzyki
+  const switchMusic = (slideIndex: number) => {
+    if (isMuted) return;
+    
+    // Zatrzymaj obecną muzykę
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    
+    // Ustaw nową ścieżkę
+    const newTrack = soundTracks[slideIndex] || soundTracks[0];
+    
+    // Jeśli to ta sama ścieżka, nie rób nic
+    if (currentAudioRef.current === newTrack) {
+      if (audioRef.current && isPlaying) {
+        audioRef.current.play().catch(console.error);
+      }
+      return;
+    }
+    
+    // Stwórz nowy element audio
+    audioRef.current = new Audio(newTrack);
+    audioRef.current.loop = true;
+    audioRef.current.volume = 0.5;
+    currentAudioRef.current = newTrack;
+    
+    // Jeśli prezentacja jest włączona, odtwórz muzykę
+    if (isPlaying) {
+      audioRef.current.play().catch(console.error);
+    }
+  };
+
+  // Funkcja do wyciszania/odciszania
+  const toggleMute = () => {
+    const newMutedState = !isMuted;
+    setIsMuted(newMutedState);
+    
+    if (audioRef.current) {
+      if (newMutedState) {
+        audioRef.current.pause();
+      } else if (isPlaying) {
+        audioRef.current.play().catch(console.error);
+      }
+    }
+  };
   
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -281,21 +432,50 @@ const FoodWrapped: React.FC = () => {
     }
   }, []);
   
+  // Effect dla automatycznego przełączania slajdów
   useEffect(() => {
     if (isPlaying && !showAdminPanel && !personNotFound) {
       const timer = setInterval(() => {
         setCurrentSlide(prev => {
-          if (prev >= 4) {
+          if (prev >= 5) {
             setIsPlaying(false);
             return prev;
           }
           return prev + 1;
         });
-      }, 3000);
+      }, 7000);
       
       return () => clearInterval(timer);
     }
   }, [isPlaying, showAdminPanel, currentSlide, personNotFound]);
+
+  // Effect dla przełączania muzyki przy zmianie slajdu
+  useEffect(() => {
+    if (!showAdminPanel && !personNotFound) {
+      switchMusic(currentSlide);
+    }
+  }, [currentSlide, showAdminPanel, personNotFound]);
+
+  // Effect dla obsługi play/pause
+  useEffect(() => {
+    if (!isMuted && audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.play().catch(console.error);
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [isPlaying, isMuted]);
+
+  // Cleanup przy odmontowywaniu komponentu
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
 
   const handlePersonSelect = (person: string) => {
     setSelectedPerson(person);
@@ -310,6 +490,13 @@ const FoodWrapped: React.FC = () => {
   };
 
   const handleBack = () => {
+    // Zatrzymaj muzykę przy powrocie do panelu admin
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+      currentAudioRef.current = '';
+    }
+    
     setShowAdminPanel(true);
     setSelectedPerson('');
     setPersonNotFound(false);
@@ -319,6 +506,14 @@ const FoodWrapped: React.FC = () => {
     const url = new URL(window.location.href);
     url.searchParams.delete('person');
     window.history.replaceState({}, '', url.pathname);
+  };
+
+  const handleSlideChange = (direction: 'next' | 'prev') => {
+    if (direction === 'next') {
+      setCurrentSlide(prev => Math.min(5, prev + 1));
+    } else {
+      setCurrentSlide(prev => Math.max(0, prev - 1));
+    }
   };
 
   if (personNotFound) {
@@ -361,23 +556,25 @@ const FoodWrapped: React.FC = () => {
     );
   }
   
-  const slides = [
-    <WelcomeSlide key="welcome" person={selectedPerson} />,
-    <OrderCountSlide key="count" count={stats.orderCount} person={selectedPerson} />,
-    <FavoriteRestaurantSlide 
-      key="restaurant" 
-      restaurant={stats.favoriteRestaurant} 
-      count={stats.favoriteRestaurantCount}
-      spent={stats.favoriteRestaurantSpent}
-    />,
-    <RankingSlide 
-      key="ranking" 
-      ranking={stats.orderRanking} 
-      betterThanPercent={stats.betterThanPercent}
-      totalPeople={stats.totalPeople}
-    />,
-    <TotalSpentSlide key="spent" amount={stats.totalSpent} person={selectedPerson} />
-  ];
+const slides = [
+  <WelcomeSlide key="welcome" person={selectedPerson} />,
+  <OrderCountSlide key="count" count={stats.orderCount} person={selectedPerson} />,
+  <FavoriteRestaurantSlide 
+    key="restaurant" 
+    restaurant={stats.favoriteRestaurant} 
+    count={stats.favoriteRestaurantCount}
+    spent={stats.favoriteRestaurantSpent}
+  />,
+  <RankingSlide 
+    key="ranking" 
+    ranking={stats.orderRanking} 
+    betterThanPercent={stats.betterThanPercent}
+    totalPeople={stats.totalPeople}
+  />,
+  <TotalSpentSlide key="spent" amount={stats.totalSpent} person={selectedPerson} />,
+  <RestaurantSummarySlide key="summary" person={selectedPerson} />
+];
+
 
   return (
     <div className="w-full max-w-md mx-auto h-screen bg-black shadow-2xl overflow-hidden relative">
@@ -393,7 +590,7 @@ const FoodWrapped: React.FC = () => {
           {slides.map((_, index) => (
             <div
               key={index}
-              className={`flex-1 h-1 rounded-full ${
+              className={`flex-1 h-[2px] rounded-full ${
                 index <= currentSlide ? 'bg-white' : 'bg-white/30'
               } ${index === currentSlide && isPlaying ? 'animate-pulse' : ''}`}
             />
@@ -402,38 +599,45 @@ const FoodWrapped: React.FC = () => {
         
         {/* Przyciski kontroli */}
         <div className="flex justify-between items-center">
-          <button
-            onClick={handleBack}
-            className="flex items-center space-x-2 text-white/80 hover:text-white transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5" />
-            <span>Powrót</span>
-          </button>
+          
+           <button
+              onClick={toggleMute}
+              className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+              title={isMuted ? "Włącz dźwięk" : "Wycisz"}
+            >
+              {isMuted ? 
+                <Image src="/images/mute.svg" alt='mute' width={24} height={24} className='invert'/> : 
+                <Image src="/images/sound.svg" alt='sound' width={24} height={24} className='invert'/>
+              }
+            </button>
           
           <div className="flex space-x-2">
             <button
               onClick={handleRestart}
               className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+              title="Od początku"
             >
-              <RotateCcw className="w-5 h-5 text-white" />
+              <Image src="/images/repeat.svg" alt='repeat' width={24} height={24} className='invert'/>
             </button>
             
             <button
               onClick={() => setIsPlaying(!isPlaying)}
               className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+              title={isPlaying ? "Zatrzymaj" : "Odtwórz"}
             >
               {isPlaying ? 
-                <Pause className="w-5 h-5 text-white" /> : 
-                <Play className="w-5 h-5 text-white" />
+                <Image src="/images/stop.svg" alt='stop' width={24} height={24} className='invert'/> : 
+                <Image src="/images/play.svg" alt='play' width={24} height={24} className='invert'/>
               }
             </button>
             
             <button
-              onClick={() => setCurrentSlide(prev => Math.min(slides.length - 1, prev + 1))}
+              onClick={() => handleSlideChange('next')}
               className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
               disabled={currentSlide >= slides.length - 1}
+              title="Następny slajd"
             >
-              <ChevronRight className="w-5 h-5 text-white" />
+              <Image src="/images/next.svg" alt='next' width={24} height={24} className='invert'/>
             </button>
           </div>
         </div>
