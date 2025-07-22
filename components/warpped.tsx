@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Play, Pause, RotateCcw, TrendingUp, MapPin, Crown, DollarSign, Share2, Copy, CheckCircle } from 'lucide-react';
+import { ChevronLeft, Copy, CheckCircle } from 'lucide-react';
 import { Order, sampleData } from '@/constants/food';
 import Image from 'next/image';
 
@@ -81,7 +81,7 @@ const SlideWrapper: React.FC<{ children: React.ReactNode; gradient: string }> = 
   </div>
 );
 
-const WelcomeSlide: React.FC<{ person: string }> = ({ person }) => (
+const WelcomeSlide: React.FC<{ person: string }> = ({ }) => (
   <SlideWrapper gradient="bg-[url('/images/bg-2.png')] bg-contain bg-center bg-no-repeat circular-regular">
   <div className="mb-8 text-center">
     <div className="flex items-end justify-center space-x-2">
@@ -98,7 +98,7 @@ const WelcomeSlide: React.FC<{ person: string }> = ({ person }) => (
 
 );
 
-const OrderCountSlide: React.FC<{ count: number; person: string }> = ({ count, person }) => (
+const OrderCountSlide: React.FC<{ count: number; person: string }> = ({ count }) => (
   <SlideWrapper gradient="bg-[url('/images/bg-3.jpg')] bg-contain bg-center bg-no-repeat circular-regular">
     <h2 className="text-3xl font-bold mb-4 mt-8 circular-bold">Twoje zamówienia</h2>
     <div className="">
@@ -133,7 +133,7 @@ const FavoriteRestaurantSlide: React.FC<{ restaurant: string; count: number; spe
   );
 };
 
-const RankingSlide: React.FC<{ ranking: number; betterThanPercent: number; totalPeople: number }> = ({ ranking, betterThanPercent, totalPeople }) => (
+const RankingSlide: React.FC<{ ranking: number; betterThanPercent: number; totalPeople: number }> = ({ ranking, betterThanPercent }) => (
   <SlideWrapper gradient="bg-[url('/images/bg-5.png')] bg-contain bg-center bg-no-repeat circular-bold">
     <h2 className="text-3xl font-bold circular-black">Twoja pozycja</h2>
     <div className="">
@@ -147,7 +147,7 @@ const RankingSlide: React.FC<{ ranking: number; betterThanPercent: number; total
   </SlideWrapper>
 );
 
-const TotalSpentSlide: React.FC<{ amount: number; person: string }> = ({ amount, person }) => (
+const TotalSpentSlide: React.FC<{ amount: number; person: string }> = ({ amount }) => (
   <SlideWrapper gradient="bg-[url('/images/bg-1.png')] bg-contain bg-center bg-no-repeat circular-bold">
     <div className="mt-[-8rem]">
       <h2 className="text-3xl mb-4 text-black circular-black">Tyle wydałes na jedzenie</h2>
@@ -309,15 +309,6 @@ const AdminPanel: React.FC<{ onSelectPerson: (person: string) => void }> = ({ on
               );
             })}
           </div>
-          
-          <div className="mt-6 p-4 bg-white/10 rounded-xl">
-            <h3 className="font-medium mb-2">Jak używać:</h3>
-            <ul className="text-sm opacity-90 text-left space-y-1">
-              <li>• Wyślij każdej osobie jej unikalny link</li>
-              <li>• Link prowadzi bezpośrednio do ich wrapped</li>
-              <li>• Możesz podglądać każdy wrapped klikając "Podgląd"</li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>
@@ -335,7 +326,7 @@ const NotFoundSlide: React.FC<{ slug: string }> = ({ slug }) => (
     <div>
       <h2 className="text-2xl font-semibold mb-4">Nie znaleziono użytkownika</h2>
       <p className="text-lg opacity-90 mb-4">
-        Link "{slug}" nie prowadzi do żadnego istniejącego wrapped.
+        Link &quot;{slug}&quot; nie prowadzi do żadnego istniejącego wrapped.
       </p>
       <p className="text-sm opacity-75">
         Sprawdź, czy link jest prawidłowy lub skontaktuj się z osobą, która Ci go wysłała.
@@ -430,7 +421,7 @@ const FoodWrapped: React.FC = () => {
         setShowAdminPanel(false);
       }
     }
-  }, []);
+  }, [switchMusic]);
   
   // Effect dla automatycznego przełączania slajdów
   useEffect(() => {
